@@ -1,0 +1,7 @@
+eclipse.preferences.version=1
+encoding//src/main/java/lab/spring/sikgu/controller/UserManageController.java=UTF-8
+encoding//src/main/java/lab/spring/sikgu/dao/UserDAO.java=UTF-8
+encoding//src/main/webapp/WEB-INF/view/index.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/view/user_form.jsp=UTF-8
+encoding//src/main/webapp/resources/json/SeoulDong.json=UTF-8
+encoding//src/main/webapp/resources/register/assets/css/style.css=UTF-8

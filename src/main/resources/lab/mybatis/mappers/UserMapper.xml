@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="lab.mybatis.user.UserMapper">
+
+
+<!-- UserManage_로그인 ############################################################# -->
+
+   <select id="login" resultType="lab.spring.sikgu.model.SikguVO"
+      parameterType="hashmap"> <!-- 타입은 소문자로 쓸 것!! -->
+      select * from sikgu where 
+      sikgu_id = #{sikgu_id} and sikgu_pwd =#{sikgu_pwd}
+   </select>
+
+   <select id="loginCheckId" resultType="lab.spring.sikgu.model.SikguVO"
+      parameterType="hashmap">
+      select * from sikgu where 
+      sikgu_id = #{sikgu_id}
+   </select>
+
+
+
+<!-- / UserManage_로그인 ########################################################### -->
+
+
+<!-- UserManage_전체 조회 ########################################################### -->
+
+   <!-- 회원 로그인 정보 전체 조회 -->
+   <select id="getSikguList"
+      resultType="lab.spring.sikgu.model.SikguVO">
+      select * from sikgu
+   </select>
+
+   <!-- 개인 사용자 전체 조회 -->
+   <select id="getCustomerList"
+      resultType="lab.spring.sikgu.model.CustomerVO">
+      select * from customer
+   </select>
+
+   <!-- 상점 사용자 전체 조회 -->
+   <select id="getStoreList"
+      resultType="lab.spring.sikgu.model.StoreVO">
+      select * from store
+   </select>
+
+<!-- / UserManage_전체 조회 ########################################################### -->
+
+<!-- UserManage_회원 가입 ############################################################# -->
+   
+   <!-- 1. 로그인 정보 저장 (sikgu table)    : join.jsp          --> 
+   <!-- 2-1. 개인 사용자 입력 페이지            : join_customer.jsp -->
+   <!-- 2-2. 상점 사용자 입력 페이지          : join_store.jsp    -->
+   
+   <!-- 1 -->
+   
+   <!-- 아이디 중복 여부 확인 -->
+   <select id="checkSikgu"
+      resultType="lab.spring.sikgu.model.SikguVO" parameterType="string">
+      select *
+      from sikgu a
+      where exists (select 'x' from sikgu where a.sikgu_id = #{sikgu_id})
+   </select>
+
+   <!-- 로그인 정보 저장 -->
+   <insert id="insertSikgu"
+      parameterType="lab.spring.sikgu.model.SikguVO">
+      insert into sikgu
+      (sikgu_id, sikgu_pwd,sikgu_type)
+      values (#{sikgu_id},#{sikgu_pwd},#{sikgu_type})
+   </insert>
+
+   <!-- 2-1 -->
+   
+   <!-- 닉네임 중복 여부 확인 -->
+   <select id="checkCustomer"
+      resultType="lab.spring.sikgu.model.CustomerVO" parameterType="string">
+      select *
+      from customer a
+      where exists (select 'x' from customer where a.customer_nickname = #{customer_nickname})
+   </select>
+
+   <!-- 개인 사용자 정보 저장 -->
+   <insert id="insertCustomer"
+      parameterType="lab.spring.sikgu.model.CustomerVO">
+      insert into customer
+      (sikgu_id,customer_nickname,customer_image_path,customer_phone,customer_address,default_x1,default_y1,
+       default_x2,default_y2,default_x3,default_y3,customer_gender,customer_age,customer_family_type)
+      values
+      (#{sikgu_id},#{customer_nickname},#{customer_image_path},#{customer_phone},#{customer_address},#{default_x1},#{default_y1}
+       ,#{default_x2},#{default_y2},#{default_x3},#{default_y3},#{customer_gender},#{customer_age},#{customer_family_type})
+   </insert>
+
+   <!-- 2-2 -->
+   <!-- 사업자 등록 번호 중복 여부 확인 -->
+   <select id="checkStore"
+      resultType="lab.spring.sikgu.model.StoreVO" parameterType="string">
+      select *
+      from store a
+      where exists (select 'x' from store where a.store_biz_number = #{store_biz_number})
+   </select>
+   
+   <!-- 상점 사용자 정보 저장 -->
+   <insert id="insertStore"
+      parameterType="lab.spring.sikgu.model.StoreVO">
+      insert into store
+      (sikgu_id,category_id,store_biz_number,store_name,store_phone,store_address,store_sido,store_sigungu,store_dong,
+       store_street,store_x,store_y,store_profile_url,store_web_url,store_sns_url,store_opendate,store_updatedate,
+       store_view_count,store_doc_count,store_follower_count,store_main_video,store_video_path)
+      values
+      (#{sikgu_id},#{category_id},#{store_biz_number},#{store_name},#{store_phone},#{store_address},#{store_sido},
+       #{store_sigungu},#{store_dong},#{store_street},#{store_x},#{store_y},#{store_profile_url},#{store_web_url},
+       #{store_sns_url},#{store_opendate},#{store_updatedate},#{store_view_count},#{store_doc_count},#{store_follower_count},
+       #{store_main_video},#{store_video_path})
+   </insert>
+   
+<!-- / UserManage_회원 가입 ############################################################# -->
+
+<!-- UserManage_회원 정보 수정 ############################################################ -->
+
+   <!-- 비밀번호 변경 -->
+   <update id="updateSikgu"
+      parameterType="lab.spring.sikgu.model.SikguVO">
+      update sikgu set sikgu_pwd=#{sikgu_pwd} where sikgu_id =#{sikgu_id}
+   </update>
+   
+   <!-- 개인 사용자 정보 수정(기본 정보) -->
+   <update id="updateCustomer"
+      parameterType="lab.spring.sikgu.model.CustomerVO">
+      update customer set
+      customer_nickname=#{customer_nickname},
+      customer_image_path=#{customer_image_path},
+      customer_phone=#{customer_phone},
+      customer_address=#{customer_address},
+      customer_gender=#{customer_gender}, customer_age=#{customer_age},
+      customer_family_type=#{customer_family_type} where
+      sikgu_id=#{sikgu_id}
+   </update>
+
+   <!-- 개인 사용자 정보 수정(좌표값 수정) -->
+   <update id="updateCustomerXY"
+      parameterType="lab.spring.sikgu.model.CustomerVO">
+      update customer set default_x1=#{default_x1},
+      default_y1=#{default_y1}, default_x2=#{default_x2},
+      default_y2=#{default_y2}, default_x3=#{default_x3},
+      default_y3=#{default_y3} where sikgu_id=#{sikgu_id}
+   </update>
+   
+   <!-- 회원정보 수정 -->
+   <update id="updateStore"
+      parameterType="lab.spring.sikgu.model.StoreVO">
+      update store set
+      category_id=#{category_id},store_biz_number=#{store_biz_number},store_name=#{store_name},store_phone=#{store_phone},
+      store_address=#{store_address},store_sido=#{store_sido},store_sigungu=#{store_sigungu},store_dong=#{store_dong},store_street=#{store_street},
+      store_x=#{store_x},store_y=#{store_y},store_profile_url=#{store_profile_url},store_web_url=#{store_web_url},store_sns_url=#{store_sns_url},
+      store_opendate=#{store_opendate},store_updatedate=#{store_updatedate},store_view_count=#{store_view_count},store_doc_count=#{store_doc_count},
+      store_follower_count=#{store_follower_count},store_main_video=#{store_main_video},store_video_path=#{store_video_path}
+      where sikgu_id=#{sikgu_id}
+   </update>
+
+<!-- / UserManage_회원 정보 수정 ########################################################### -->
+
+
+<!-- MYLIST_회원 정보 조회 ################################################################# -->
+
+   <!-- (sikgu_type == C) => mylist -->
+   <select id="getCustomer"
+      resultType="lab.spring.sikgu.model.CustomerVO" parameterType="string">
+      select *
+      from customer where sikgu_id=#{sikgu_id}
+   </select>
+
+   <!-- (sikgu_type == S) => storelist -->
+   <select id="getStore"
+      resultType="lab.spring.sikgu.model.StoreVO" parameterType="string">
+      select *
+      from store where sikgu_id=#{sikgu_id}
+   </select>
+
+<!-- / MYLIST_회원 정보 조회 ############################################################### -->
+
+</mapper>

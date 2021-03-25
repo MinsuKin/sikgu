@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="lab.mybatis.review.ReviewMapper">
+
+<!-- 상점 상세 (4개 보기) ##################################################################### -->
+
+	<!-- 상점주 게시물 4개 표시용 -->
+	<select id="getStoreContent" resultType="lab.spring.sikgu.model.ReviewVO" parameterType="hashmap">
+		select * from review 
+		where store_id = writer_id and ROWNUM &lt;=5 
+		order by review_id desc
+	</select>
+
+	<!-- 방문객 게시물 4개 표시용 -->
+	<select id="getCustomerContent" resultType="lab.spring.sikgu.model.ReviewVO" parameterType="hashmap">
+		select * from review 
+		where store_id != writer_id and ROWNUM &lt;=5 
+		order by review_id desc
+	</select>
+
+<!-- / 상점 상세 (4개 보기) ##################################################################### -->
+
+<!-- review_upload ##################################################################### -->
+	   <select id="reviewUpload" parameterType="lab.spring.sikgu.model.ReviewVO">
+   		insert into review (review_id,store_id,writer_id,review_description,review_url,review_type,review_size,review_title,review_create_date)
+        values (REVIEW_SEQ.NEXTVAL ,#{store_id},#{writer_id},#{review_description},#{review_url},#{review_type},#{review_size},#{review_title}, SYSDATE)
+   </select>
+<!-- / review_upload ################################################################### -->
+</mapper>
