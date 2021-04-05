@@ -4,5 +4,8 @@ Summary: Local restaurant infomation map of Gangnam district based on City of Se
 > Backend: Java - Spring
 
 ## Report
-### Report_SIKGU_v1.pptx google viewer page(Korean)
+### Presentation_SIKGU_v1.pptx google viewer page(Korean)
 https://drive.google.com/file/d/1HeYOdCVtyXag2qRPO7w89H8-y2_MpJVk/view?usp=sharing
+
+## Project continued to v2
+https://github.com/MinsuKin/sikgu_v2
